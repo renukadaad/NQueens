@@ -1,0 +1,65 @@
+#include<iostream>
+#include<vector>
+using namespace std;
+#define N 8
+
+void printboard(vector<vector<int>>& board){
+    for(auto row:board){
+        for(auto cell : row){
+            if(cell==1){
+                cout<<"Q"<<" ";
+            }
+            else{
+                cout<<"."<<" ";
+            }
+        }
+        cout<<endl;
+    }
+    cout<<endl;
+}
+
+bool isSafe(vector<vector<int>>& board, int row, int col){
+    for(int i=0;i<row;i++){
+        if(board[i][col]==1){
+            return false;
+        }
+    }
+    for(int i=row,j=col; i>=0 && j>=0; i--,j--){
+        if(board[i][j]==1){
+            return false;
+        }
+    }
+    for(int i=row,j=col; i>=0 && j<N;i--,j++){
+        if(board[i][j]==1){
+            return false;
+        }
+    }
+    return true;
+}
+
+void solveNQueen(vector<vector<int>>& board, int row,vector<vector<vector<int>>>& solutions){
+    if(row==N){
+        solutions.push_back(board);
+        return;
+    }
+    for(int col=0;col<N;col++){
+        if(isSafe(board,row,col)){
+            board[row][col]=1;
+            solveNQueen(board,row+1,solutions);
+            board[row][col]=0;
+        }
+        
+    }
+}
+
+int main(){
+    vector<vector<int>> board(N,vector<int>(N,0));
+    board[0][0]=1;
+    vector<vector<vector<int>>>solutions;
+    solveNQueen(board,1,solutions);
+    for(auto solution : solutions){
+        printboard(solution);
+        cout<<endl;
+    }
+    return 0;
+}
